@@ -233,19 +233,30 @@ class Game {
     this.height = 720;
     this.hero = new Hero(this);
     this.bg = new Background(this);
+    this.gameOn = false
     this.setCanvas();
-    this.reset();
+    this.titleTimer = setInterval(this.titleDisplay.bind(this), 33);
+    document.addEventListener(
+      "keydown",
+      (e) => {this.reset(e, this);}
+    );
+    // this.reset();
   };
 
   // variable properties are set here
-  reset() {
-    this.hero.reset();
-    this.enemies = [];
-    this.heroBullets = [];
-    this.enemyBullets = [];
-    this.ctx.font = "24px Orbitron";
-    this.timer = setInterval(this.mainLoop.bind(this), 33);
-    console.log("game started");
+  reset(e, myself) {
+    if (!myself.gameOn) {
+      myself.hero.reset();
+      myself.enemies = [];
+      myself.heroBullets = [];
+      myself.enemyBullets = [];
+      myself.ctx.font = "24px Orbitron";
+      clearInterval(myself.titleTimer);
+      myself.titleTimer = null;
+      myself.timer = setInterval(myself.mainLoop.bind(myself), 33);
+      myself.gameOn = true;
+      console.log("game started");
+    }
   }
 
   // sprites are kept in separate arrays to make collision detection easier
@@ -268,6 +279,15 @@ class Game {
     ctx.lineWidth = 8;
     ctx.fillStyle = "darkBlue";
     this.ctx = ctx;
+  };
+
+  titleDisplay() {
+    this.bg.display();
+    this.hero.display();
+    this.ctx.textAlign = "center";
+    this.ctx.font = "48px Orbitron";
+    this.ctx.fillText("Space Game", this.width / 2, this.height / 2);
+
   };
 
   detectCollisions() {
@@ -350,7 +370,8 @@ class Game {
       this.ctx.textAlign = "center";
       this.ctx.font = "48px Orbitron";
       this.ctx.fillText("Game Over", this.width / 2, this.height / 2);
-      setTimeout(this.reset.bind(this), 2000);
+      this.gameOn = false;
+      // setTimeout(this.reset.bind(this), 2000);
     };
   };
 
