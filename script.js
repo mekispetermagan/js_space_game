@@ -246,8 +246,7 @@ class Background extends Sprite {
   // the method of the parent class is overwritten;
   // the sprite is displayed twice to generate moving background effect
   display() {
-    topy =
-    gh = this.game.height;
+    const gh = this.game.height;
     // two copies are displayed one atop of the other
     const displayY1 = (this.y - gh / 2) % (gh * 2) - gh;
     const displayY2 = (this.y + gh / 2) % (gh * 2) - gh;
